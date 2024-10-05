@@ -5,21 +5,17 @@ import {
   GestureHandlerRootView,
   TextInput,
 } from "react-native-gesture-handler";
-import { StackNavigationProp } from "@react-navigation/stack"; // Типізація для Stack навігації
-import { RootStackParamList } from "@/types/navigation";
+import { useRouter } from "expo-router"; // Використання useRouter з expo-router
 import { MailIcon, LockIcon, PhoneIcon } from "@/assets/svgs/SvgIcons"; // Ваші іконки
 
-// Визначення типу навігації для RegisterScreen
-type RegisterScreenProps = {
-  navigation: StackNavigationProp<RootStackParamList, "Register">;
-};
-
-export default function RegisterScreen({ navigation }: RegisterScreenProps) {
+export default function RegisterScreen() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const router = useRouter();
 
   return (
     <GestureHandlerRootView style={styles.root}>
@@ -86,7 +82,7 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
             <Text style={styles.inputLabel}>Пароль</Text>
             <View style={styles.iconInputContainer}>
               <View style={styles.iconBlock}>
-                <LockIcon style={styles.icon} />
+                <LockIcon style={styles.lockIcon} />
               </View>
               <TextInput
                 value={password}
@@ -106,7 +102,9 @@ export default function RegisterScreen({ navigation }: RegisterScreenProps) {
         {/* Відступи для тексту "Увійти" */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Уже маєте обліковий запис?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)/auth/LoginScreen")}
+          >
             <Text style={styles.registerLink}>Увійти</Text>
           </TouchableOpacity>
         </View>
@@ -191,6 +189,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+
     fontSize: 16,
     paddingHorizontal: 10,
     borderTopRightRadius: 25,
@@ -206,8 +205,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   icon: {
-    width: 24,
+    width: 26,
     height: 24,
+  },
+  lockIcon: {
+    width: 28,
+    height: 35,
+    marginBottom: 10,
+    marginLeft: 5,
   },
   button: {
     width: 252,
