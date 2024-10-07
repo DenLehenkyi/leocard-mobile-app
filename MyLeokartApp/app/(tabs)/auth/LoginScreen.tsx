@@ -7,16 +7,25 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { MailIcon, LockIcon } from "@/assets/svgs/SvgIcons";
 import Colors from "@/constants/Colors";
-import { LockIcon, MailIcon } from "@/assets/svgs/SvgIcons";
-import Svg, { Rect } from "react-native-svg";
-import { useRouter } from "expo-router";
+import { handleLogin } from "@/firebase/FirebaseService";
+import { NavigationProp } from "@/types"; // Імпорт глобального типу для навігації
 
-export default function LoginScreen() {
+type Props = {
+  navigation: NavigationProp;
+};
+
+export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
+
+  const loginUser = () => {
+    const user = handleLogin(email, password);
+
+    navigation.replace("Home");
+  };
+
   return (
     <>
       <View style={styles.logoContainer}>
@@ -61,7 +70,7 @@ export default function LoginScreen() {
         </View>
 
         {/* Кнопка входу */}
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={loginUser}>
           <Text style={styles.buttonText}>Увійти</Text>
         </TouchableOpacity>
 
@@ -69,9 +78,7 @@ export default function LoginScreen() {
       </View>
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>Немає облікового запису?</Text>
-        <TouchableOpacity
-          onPress={() => router.push("/(tabs)/auth/RegisterScreen")}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text style={styles.registerLink}>Зареєструватись</Text>
         </TouchableOpacity>
       </View>

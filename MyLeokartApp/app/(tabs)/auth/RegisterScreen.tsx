@@ -7,8 +7,14 @@ import {
 } from "react-native-gesture-handler";
 import { useRouter } from "expo-router"; // Використання useRouter з expo-router
 import { MailIcon, LockIcon, PhoneIcon } from "@/assets/svgs/SvgIcons"; // Ваші іконки
+import { handleRegister } from "@/firebase/FirebaseService";
+import { NavigationProp } from "@/types";
 
-export default function RegisterScreen() {
+type Props = {
+  navigation: NavigationProp;
+};
+
+export default function RegisterScreen({ navigation }: Props) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -17,6 +23,14 @@ export default function RegisterScreen() {
 
   const router = useRouter();
 
+  const registerUser = () => {
+    const newUser = handleRegister(name, surname, phoneNumber, email, password);
+    if (newUser) {
+      console.log("user registered ", newUser);
+    } else {
+      console.log("error with register");
+    }
+  };
   return (
     <GestureHandlerRootView style={styles.root}>
       <View style={styles.registerContainer}>
@@ -95,16 +109,14 @@ export default function RegisterScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={registerUser}>
           <Text style={styles.buttonText}>Зареєструватись</Text>
         </TouchableOpacity>
 
         {/* Відступи для тексту "Увійти" */}
         <View style={styles.footerContainer}>
           <Text style={styles.footerText}>Уже маєте обліковий запис?</Text>
-          <TouchableOpacity
-            onPress={() => router.push("/(tabs)/auth/LoginScreen")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.registerLink}>Увійти</Text>
           </TouchableOpacity>
         </View>
